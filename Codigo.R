@@ -14,7 +14,7 @@ user_data= (read.csv(file = "datosUso.csv", header=T, encoding = "UTF-8"))
 # 1 - Calcular Tasa de Arribo
 pob_total = 4320000000
 music_perc = 5 / 10000
-music_use_perc = 0.1
+music_use_perc = 0.01
 # Calcular numero de usuarios
 users = pob_total * music_perc * music_use_perc 
 
@@ -30,6 +30,10 @@ lambda_a = lambda_a_mes/(30*24*60*60) # tasa de arribo en segundos
 ggplot(user_data, aes(x = t_espera)) +
   geom_histogram(breaks=seq(0, 90000, by=50), fill = "white", colour = "black") +
   labs(title="Histograma de tiempos de espera", x="Tiempo de espera (s)", y="Frecuencia")
+
+# Diagrama de cajas de tiempo de espera
+boxplot(user_data$t_espera,data=user_data, main="Diagrama de caja sobre tiempo de espera máximo",
+        ylab="Duración en segundos")
 
 # Grafico Q-Q de tiempos de espera 
 qqnorm(user_data$t_espera, pch = 1, frame = FALSE, main = "Grafico Q-Q de tiempos de espera (s)")
@@ -121,16 +125,16 @@ summary(m2012_2_7)
 # Calcular numero de pruebas requeridas
 p = 0.9
 e = 0.05
-n = 3 #round(p * (1 - p) * (qnorm(1 - (e/2))/e)^2)
+n = round(p * (1 - p) * (qnorm(1 - (e/2))/e)^2)
 
 # Parametros de la simulacion
-k <- 9 # numero de servidores
-testTime = 604800/7  # segundos en una semana
-ttMultiplier = 52 *7
+k <- 3 # numero de servidores
+testTime = 604800  # segundos en una semana
+ttMultiplier = 52
 mu <- 1/lambda_a # tiempo promedio entre arribos
-ms <- rep(0.09, 7)
+ms <- rep(0.09, 1)
 ms <- c(ms, 0.2, 0.22) # pendientes de los tiempos de servicio de las computadoras
-bs <- rep(0, 9) # intercepciones de los tiempos de servicio de las computadoras
+bs <- rep(0, 3) # intercepciones de los tiempos de servicio de las computadoras
 
 # Parametros de ventas
 comissionLimit = 1000000
